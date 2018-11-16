@@ -15327,6 +15327,35 @@ Les colonnes 0001.14, 0004.1, 0007, 0010 et 0013 sont hors de propos</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Ajout-d'un-colonne-g&#233;n&#233;ration">Ajout d'un colonne g&#233;n&#233;ration<a class="anchor-link" href="#Ajout-d'un-colonne-g&#233;n&#233;ration">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[164]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">generation</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;BabyBoom&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">54</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">],</span>
+             <span class="s2">&quot;X&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">39</span><span class="p">,</span><span class="mi">54</span><span class="p">],</span>
+             <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">18</span><span class="p">,</span><span class="mi">38</span><span class="p">],</span>
+             <span class="s2">&quot;Z&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">17</span><span class="p">]}</span>
+<span class="k">def</span> <span class="nf">gen</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">generation</span><span class="p">:</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">x</span><span class="o">&gt;=</span> <span class="n">generation</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">x</span><span class="o">&lt;=</span> <span class="n">generation</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">1</span><span class="p">]):</span>
+            <span class="k">return</span> <span class="n">k</span>
+
+<span class="n">dataset</span><span class="p">[</span><span class="s2">&quot;gen&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">var</span><span class="p">:</span> <span class="n">gen</span><span class="p">(</span><span class="n">var</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Visualisation-des-donn&#233;es">Visualisation des donn&#233;es<a class="anchor-link" href="#Visualisation-des-donn&#233;es">&#182;</a></h2>
 </div>
 </div>
@@ -15341,7 +15370,7 @@ Les colonnes 0001.14, 0004.1, 0007, 0010 et 0013 sont hors de propos</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[54]:</div>
+<div class="prompt input_prompt">In&nbsp;[165]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">dataset</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
@@ -15357,7 +15386,7 @@ Les colonnes 0001.14, 0004.1, 0007, 0010 et 0013 sont hors de propos</p>
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[54]:</div>
+    <div class="prompt output_prompt">Out[165]:</div>
 
 
 
@@ -15422,6 +15451,15 @@ Les colonnes 0001.14, 0004.1, 0007, 0010 et 0013 sont hors de propos</p>
       <th>revoir_film</th>
       <th>avoir_vu_enfant</th>
       <th>porteur_emotion</th>
+      <th>per_rec_mus</th>
+      <th>per_rec_rep</th>
+      <th>per_total</th>
+      <th>per_mov_sw</th>
+      <th>per_mov_rl</th>
+      <th>per_mov_ter</th>
+      <th>per_mov_tit</th>
+      <th>per_mov_lotr</th>
+      <th>gen</th>
     </tr>
   </thead>
   <tbody>
@@ -15469,6 +15507,15 @@ Les colonnes 0001.14, 0004.1, 0007, 0010 et 0013 sont hors de propos</p>
       <td>Plutôt d'accord</td>
       <td>Pas d'accord</td>
       <td>D'accord</td>
+      <td>0.8</td>
+      <td>0.8</td>
+      <td>0.8</td>
+      <td>1.0</td>
+      <td>0.5</td>
+      <td>0.5</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>Y</td>
     </tr>
     <tr>
       <th>1</th>
@@ -15514,6 +15561,15 @@ Les colonnes 0001.14, 0004.1, 0007, 0010 et 0013 sont hors de propos</p>
       <td>Neutre</td>
       <td>Plutôt pas d'accord</td>
       <td>Plutôt d'accord</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>Y</td>
     </tr>
     <tr>
       <th>2</th>
@@ -15559,6 +15615,15 @@ Les colonnes 0001.14, 0004.1, 0007, 0010 et 0013 sont hors de propos</p>
       <td>Plutôt d'accord</td>
       <td>Pas d'accord</td>
       <td>D'accord</td>
+      <td>1.0</td>
+      <td>0.8</td>
+      <td>0.9</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>0.5</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>Y</td>
     </tr>
     <tr>
       <th>3</th>
@@ -15604,6 +15669,15 @@ Les colonnes 0001.14, 0004.1, 0007, 0010 et 0013 sont hors de propos</p>
       <td>D'accord</td>
       <td>Neutre</td>
       <td>Plutôt d'accord</td>
+      <td>0.6</td>
+      <td>0.6</td>
+      <td>0.6</td>
+      <td>1.0</td>
+      <td>0.5</td>
+      <td>0.0</td>
+      <td>0.5</td>
+      <td>1.0</td>
+      <td>Y</td>
     </tr>
     <tr>
       <th>4</th>
@@ -15649,6 +15723,15 @@ Les colonnes 0001.14, 0004.1, 0007, 0010 et 0013 sont hors de propos</p>
       <td>D'accord</td>
       <td>Neutre</td>
       <td>D'accord</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>Y</td>
     </tr>
   </tbody>
 </table>
@@ -16945,8 +17028,97 @@ L&#39;intervalle de confiance des différence de moyenne est de : [-0.12,0.01].
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <div class="alert alert-success">
-On ne peut pas totallement rejeter l'hypothèse nulle. En effet, la p-value qu'on obtient après le test de student est de 0.07. Cependant, la p-value étant très projet de 0.05, utilisé comunément en statistique pour rejeter l'hypothèse, nous pouvons en déduire qu'il y a de forte préseomption contre l'hypothèse.<br><br>
+On ne peut pas totallement affirmer l'hypothèse nulle. En effet, la p-value qu'on obtient après le test de student est de 0.07. Cependant, la p-value étant très projet de 0.05, utilisé comunément en statistique pour rejeter l'hypothèse, nous pouvons en déduire qu'il y a de forte préseomption contre l'hypothèse nulle.<br><br>
 Cela confirme bien le biais que nous craignons, nos films sont représentatifs de notre catégorie socio-professionnelle
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="alert alert-warning">
+H2.2 : Les femmes reconnaissent plus les films par la musique que les hommes:
+<ul>
+<li>$H_0:\mu_{homme-mus}=\mu_{femme-mus}$</li>
+<li>$H_a:\mu_{homme-mus}\ne\mu_{femme-mus}$</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[177]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">mean_student_serie</span><span class="p">(</span><span class="n">df_sexe_mus</span><span class="p">[</span><span class="n">df_sexe_rep</span><span class="p">[</span><span class="s2">&quot;sexe&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Homme&quot;</span><span class="p">][</span><span class="s2">&quot;per_rec_mus&quot;</span><span class="p">],</span>
+                   <span class="s2">&quot;Homme reconnaissant la réplique&quot;</span><span class="p">,</span>
+                   <span class="n">df_sexe_mus</span><span class="p">[</span><span class="n">df_sexe_rep</span><span class="p">[</span><span class="s2">&quot;sexe&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Femme&quot;</span><span class="p">][</span><span class="s2">&quot;per_rec_mus&quot;</span><span class="p">],</span>
+                  <span class="s2">&quot;femme reconnaissant la réplique&quot;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>La moyenne de Homme reconnaissant la réplique est de 0.76 et la moyenne de femme reconnaissant la réplique est de 0.67
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[178]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">student_pval_serie_ind</span><span class="p">(</span><span class="n">df_sexe_mus</span><span class="p">[</span><span class="n">df_sexe_rep</span><span class="p">[</span><span class="s2">&quot;sexe&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Homme&quot;</span><span class="p">][</span><span class="s2">&quot;per_rec_mus&quot;</span><span class="p">],</span>
+                    <span class="n">df_sexe_mus</span><span class="p">[</span><span class="n">df_sexe_rep</span><span class="p">[</span><span class="s2">&quot;sexe&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Femme&quot;</span><span class="p">][</span><span class="s2">&quot;per_rec_mus&quot;</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>pvalue = 0.001427439681699237, t = 3.2191853966493635
+L&#39;intervalle de confiance des différence de moyenne est de : [-0.14,-0.04].
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="alert alert-success">
+On ne peut rejeter l'hypothèse nulle vu la p-value. Comme dit précédement, ce test statistique montre bien que les films choisis reflètent notre catégorie socio-professionnelle
 </div>
 </div>
 </div>
@@ -18227,15 +18399,6 @@ On remarque qu'il n'y a que 38 personnes de nationalité étrangères dans notre
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <div class="alert alert-info">
-On remarque qu'il n'y a que 38 personnes de nationalité étrangères dans notre échantillon. Cela peut causer des soucis au niveau de la normalité des variables. (Théorème de centrale limite)
-</div>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<div class="alert alert-info">
 Parmi les différentes générations (baby-boomers / X / Y / Z), la génération Y (née entre 1980 et 2000) a une meilleure connaissance des films qui sont proposés (cette génération est la génération ciblée)
 <ul>
 <li>$H_0:\mu_{babyboomer}=\mu_X=\mu_Y=\mu_Z$</li>
@@ -18244,6 +18407,282 @@ Parmi les différentes générations (baby-boomers / X / Y / Z), la génération
 </div>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="alert alert-info">
+On va utiliser ANNOVA pour confirmer ou infirmer les hypothèses. De même que pour Student, bien que nos variables prennent des valeurs discrète et leur distribution n'est pas normale, on peut appliquer l'ANNOVA grâce à la taille de l'échantillon.
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Pr&#233;paration-du-dataset-pour-l'hypoth&#232;se">Pr&#233;paration du dataset pour l'hypoth&#232;se<a class="anchor-link" href="#Pr&#233;paration-du-dataset-pour-l'hypoth&#232;se">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[168]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">col_to_plot</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;per_total&quot;</span><span class="p">,</span><span class="s2">&quot;gen&quot;</span><span class="p">]</span>
+<span class="n">df_stats_gen</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+<span class="n">df_stats_gen</span><span class="p">[</span><span class="n">col_to_plot</span><span class="p">]</span><span class="o">=</span><span class="n">dataset</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="n">col_to_plot</span><span class="p">]</span>
+<span class="n">df_stats_gen</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[168]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>per_total</th>
+      <th>gen</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.8</td>
+      <td>Y</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1.0</td>
+      <td>Y</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.9</td>
+      <td>Y</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.6</td>
+      <td>Y</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1.0</td>
+      <td>Y</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Visualisation">Visualisation<a class="anchor-link" href="#Visualisation">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[186]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_stats_gen</span><span class="p">[</span><span class="n">df_stats_gen</span><span class="p">[</span><span class="s2">&quot;gen&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Z&quot;</span><span class="p">][</span><span class="s2">&quot;per_total&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[186]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0.8    4
+0.7    4
+0.6    3
+1.0    1
+Name: per_total, dtype: int64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[189]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mi">10</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">)])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-intense-fg ansi-bold">---------------------------------------------------------------------------</span>
+<span class="ansi-red-intense-fg ansi-bold">TypeError</span>                                 Traceback (most recent call last)
+<span class="ansi-green-intense-fg ansi-bold">&lt;ipython-input-189-ccd20104407e&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-intense-fg ansi-bold">()</span>
+<span class="ansi-green-intense-fg ansi-bold">----&gt; 1</span><span class="ansi-yellow-intense-fg ansi-bold"> </span>pd<span class="ansi-yellow-intense-fg ansi-bold">.</span>Series<span class="ansi-yellow-intense-fg ansi-bold">(</span>data <span class="ansi-yellow-intense-fg ansi-bold">=</span> <span class="ansi-yellow-intense-fg ansi-bold">[</span><span class="ansi-cyan-intense-fg ansi-bold">0</span><span class="ansi-yellow-intense-fg ansi-bold">]</span><span class="ansi-yellow-intense-fg ansi-bold">*</span><span class="ansi-cyan-intense-fg ansi-bold">10</span><span class="ansi-yellow-intense-fg ansi-bold">,</span> index<span class="ansi-yellow-intense-fg ansi-bold">=</span><span class="ansi-yellow-intense-fg ansi-bold">[</span>x <span class="ansi-green-intense-fg ansi-bold">for</span> x <span class="ansi-green-intense-fg ansi-bold">in</span> range<span class="ansi-yellow-intense-fg ansi-bold">(</span><span class="ansi-cyan-intense-fg ansi-bold">0</span><span class="ansi-yellow-intense-fg ansi-bold">,</span><span class="ansi-cyan-intense-fg ansi-bold">1</span><span class="ansi-yellow-intense-fg ansi-bold">,</span><span class="ansi-cyan-intense-fg ansi-bold">0.1</span><span class="ansi-yellow-intense-fg ansi-bold">)</span><span class="ansi-yellow-intense-fg ansi-bold">]</span><span class="ansi-yellow-intense-fg ansi-bold">)</span>
+
+<span class="ansi-red-intense-fg ansi-bold">TypeError</span>: &#39;float&#39; object cannot be interpreted as an integer</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[182]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">col_to_plot</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">,</span><span class="s2">&quot;Y&quot;</span><span class="p">,</span><span class="s2">&quot;X&quot;</span><span class="p">,</span><span class="s2">&quot;BabyBoom&quot;</span><span class="p">]</span>
+<span class="n">df_plot</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">col_to_plot</span><span class="p">:</span>
+    
+    <span class="n">norm</span> <span class="o">=</span> <span class="n">df_stats_gen</span><span class="p">[</span><span class="n">df_stats_gen</span><span class="p">[</span><span class="s2">&quot;gen&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">k</span><span class="p">][</span><span class="s2">&quot;per_total&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+    <span class="n">df_plot</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_stats_gen</span><span class="p">[</span><span class="n">df_stats_gen</span><span class="p">[</span><span class="s2">&quot;gen&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">k</span><span class="p">][</span><span class="s2">&quot;per_total&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">/</span><span class="n">norm</span>
+
+<span class="n">df_plot</span> <span class="o">=</span> <span class="n">df_plot</span><span class="o">.</span><span class="n">sort_index</span><span class="p">(</span><span class="n">ascending</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+<span class="n">df_plot</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[182]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>1.0</th>
+      <th>0.8</th>
+      <th>0.7</th>
+      <th>0.6</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Z</th>
+      <td>0.083333</td>
+      <td>0.333333</td>
+      <td>0.333333</td>
+      <td>0.250000</td>
+    </tr>
+    <tr>
+      <th>Y</th>
+      <td>0.182203</td>
+      <td>0.220339</td>
+      <td>0.156780</td>
+      <td>0.122881</td>
+    </tr>
+    <tr>
+      <th>X</th>
+      <td>0.026316</td>
+      <td>0.184211</td>
+      <td>0.236842</td>
+      <td>0.236842</td>
+    </tr>
+    <tr>
+      <th>BabyBoom</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.142857</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
