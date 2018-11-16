@@ -13250,15 +13250,17 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="prompt input_prompt">In&nbsp;[392]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="k">import</span> <span class="n">ttest_ind</span>
 <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="k">import</span> <span class="n">ttest_rel</span>
 <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="k">import</span> <span class="n">shapiro</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="k">import</span> <span class="n">f_oneway</span>
 <span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="nn">sm</span>
 <span class="kn">import</span> <span class="nn">statsmodels.formula.api</span> <span class="k">as</span> <span class="nn">smf</span>
 <span class="kn">import</span> <span class="nn">statsmodels.stats</span> <span class="k">as</span> <span class="nn">sms</span>
+<span class="kn">from</span> <span class="nn">statsmodels.formula.api</span> <span class="k">import</span> <span class="n">ols</span>
 </pre></div>
 
     </div>
@@ -16151,7 +16153,7 @@ Par ailleurs, les échantillons sont bien indépendants.
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[69]:</div>
+<div class="prompt input_prompt">In&nbsp;[387]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">mean_student</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="n">col1</span><span class="p">,</span><span class="n">col2</span><span class="p">):</span>
@@ -16186,11 +16188,52 @@ Par ailleurs, les échantillons sont bien indépendants.
     
     <span class="n">cm</span> <span class="o">=</span> <span class="n">sms</span><span class="o">.</span><span class="n">weightstats</span><span class="o">.</span><span class="n">CompareMeans</span><span class="p">(</span><span class="n">sms</span><span class="o">.</span><span class="n">weightstats</span><span class="o">.</span><span class="n">DescrStatsW</span><span class="p">(</span><span class="n">serie2</span><span class="p">),</span> 
                                       <span class="n">sms</span><span class="o">.</span><span class="n">weightstats</span><span class="o">.</span><span class="n">DescrStatsW</span><span class="p">(</span><span class="n">serie1</span><span class="p">))</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;L&#39;intervalle de confiance des différence de moyenne est de : [</span><span class="si">{0[0]:04.2f}</span><span class="s2">,</span><span class="si">{0[1]:04.2f}</span><span class="s2">].&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;L&#39;intervalle de confiance des différence de moyenne est de : [</span><span class="si">{0[0]:04.2}</span><span class="s2">,</span><span class="si">{0[1]:04.2f}</span><span class="s2">].&quot;&quot;&quot;</span>
           <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cm</span><span class="o">.</span><span class="n">tconfint_diff</span><span class="p">(</span><span class="n">usevar</span><span class="o">=</span><span class="s1">&#39;unequal&#39;</span><span class="p">)))</span>   
+
+<span class="k">def</span> <span class="nf">anova_mean</span><span class="p">(</span><span class="n">ser</span><span class="p">):</span>
+    <span class="n">toprint</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">ser</span><span class="p">:</span>
+        <span class="n">toprint</span> <span class="o">+=</span> <span class="s2">&quot;La moyenne de </span><span class="si">{}</span><span class="s2"> est de </span><span class="si">{:04.2f}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">ser</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">toprint</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">anova_test</span><span class="p">(</span><span class="n">ser</span><span class="p">):</span>
+    <span class="n">tp</span> <span class="o">=</span> <span class="n">f_oneway</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">ser</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">ser</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;p-value = </span><span class="si">{0[1]}</span><span class="s2">, t = </span><span class="si">{0[0]}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tp</span><span class="p">))</span>
 </pre></div>
 
     </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[388]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">anova_test</span><span class="p">(</span><span class="n">dictt_an</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>p-value = 2.0733839115818846e-10, t = 17.360422776656275
+</pre>
+</div>
+</div>
+
 </div>
 </div>
 
@@ -17118,7 +17161,7 @@ L&#39;intervalle de confiance des différence de moyenne est de : [-0.14,-0.04].
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <div class="alert alert-success">
-On ne peut rejeter l'hypothèse nulle vu la p-value. Comme dit précédement, ce test statistique montre bien que les films choisis reflètent notre catégorie socio-professionnelle
+On peut rejeter l'hypothèse nulle vu la p-value. Comme dit précédement, ce test statistique montre bien que les films choisis reflètent notre catégorie socio-professionnelle
 </div>
 </div>
 </div>
@@ -17538,7 +17581,7 @@ L&#39;intervalle de confiance des différence de moyenne est de : [-0.09,0.06].
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>0 appartient à l'intervalle de confiance à 95%, ce qui confirme l'hypothèse nulle</p>
+<p>0.01 appartient à l'intervalle de confiance à 95%, ce qui confirme l'hypothèse nulle</p>
 
 </div>
 </div>
@@ -17747,14 +17790,14 @@ Après application du test, nous devons accepter l'hypothèse nulle. La p-value 
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <div class="alert alert-info">
-H4.1 : Les homme pensant reconnaître plus par la musique reconnaissent autant la musique que ceux qui pensent reconnaître par la réplique
+H4.1 : Les homme pensant reconnaître plus par la réplique reconnaissent autant la réplique que ceux qui pensent reconnaître par la musique
 <ul>
     <li>$H_0:\mu_{homme-recmus}=\mu_{homme-recrep}$</li>
     <li>$H_a:\mu_{homme-recmus}\neq\mu_{homme-recrep}$</li>
 </ul>
 Ici $\mu_{gomme-recmus}$ représente la moyenne des réponses (sur la musique) des femmes pensant reconnaître la musique. $\mu_{homme-recrep}$ représente la moyenne des réponses (sur la musique) des femmes pensant reconnaître la réplique.
 <br><br>
-H4.2 Les homme pensant reconnaître plus par la réplique reconnaissent autant la réplique que ceux qui pensent reconnaître par la musique
+H4.2 Les homme pensant reconnaître plus par la musique reconnaissent autant la musique que ceux qui pensent reconnaître par la réplique
 <ul>
     <li>$H_0:\mu_{homme-recmus}=\mu_{homme-recrep}$</li>
     <li>$H_a:\mu_{homme-recmus}\neq\mu_{homme-recrep}$</li>
@@ -17799,7 +17842,7 @@ Comme pour la partie précédente : <b> On aplique un test de Student mais cette
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <div class="alert alert-warning">
-Test Hypothèse 4.1 : Les homme pensant reconnaître plus par la musique reconnaissent autant la musique que ceux qui pensent reconnaître par la réplique
+Test Hypothèse 4.1 : Les homme pensant reconnaître plus par la musique reconnaissent autant la réplique que ceux qui pensent reconnaître par la réplique
 </div>
 </div>
 </div>
@@ -18194,7 +18237,7 @@ Les français reconnaissent les films proposés autant que les autres nationalit
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[155]:</div>
+<div class="prompt input_prompt">In&nbsp;[418]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">col_to_plot</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;per_total&quot;</span><span class="p">]</span>
@@ -18215,11 +18258,11 @@ Les français reconnaissent les films proposés autant que les autres nationalit
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[157]:</div>
+<div class="prompt input_prompt">In&nbsp;[419]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">df_plot</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,]</span><span class="o">.</span><span class="n">iplot</span><span class="p">(</span><span class="n">kind</span> <span class="o">=</span> <span class="s2">&quot;bar&quot;</span><span class="p">,</span><span class="n">asFigure</span><span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-<span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;</span><span class="si">{}% d</span><span class="s2">es &lt;br&gt;films reconnus&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">)]</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Score : </span><span class="si">{}</span><span class="s2">/10&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
 <span class="n">lab_x_axis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s2">&quot;Reconnaissance des films par les autres nationalité&quot;</span><span class="p">,</span><span class="s2">&quot;Reconnaissance des films par les Francais&quot;</span><span class="p">])</span>
 <span class="n">cpt</span> <span class="o">=</span><span class="mi">0</span>
 <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">fig</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
@@ -18245,7 +18288,7 @@ Les français reconnaissent les films proposés autant que les autres nationalit
 
 
 <div class="output_html rendered_html output_subarea ">
-<div id="c22b5a9c-2a7b-42ce-9bc2-7ce541c71507" style="height: 525px; width: 100%;" class="plotly-graph-div"></div><script type="text/javascript">require(["plotly"], function(Plotly) { window.PLOTLYENV=window.PLOTLYENV || {};window.PLOTLYENV.BASE_URL="https://plot.ly";Plotly.newPlot("c22b5a9c-2a7b-42ce-9bc2-7ce541c71507", [{"marker": {"color": "rgba(255, 153, 51, 0.6)", "line": {"color": "rgba(255, 153, 51, 1.0)", "width": 1}}, "name": "100% des <br>films reconnus", "orientation": "v", "text": "", "x": ["Reconnaissance des films par les autres nationalit\u00e9", "Reconnaissance des films par les Francais"], "y": [0.02631578947368421, 0.16793893129770993], "type": "bar", "uid": "5d68c38c-7e7d-4222-9a9a-c77895d16306"}, {"marker": {"color": "rgba(55, 128, 191, 0.6)", "line": {"color": "rgba(55, 128, 191, 1.0)", "width": 1}}, "name": "90% des <br>films reconnus", "orientation": "v", "text": "", "x": ["Reconnaissance des films par les autres nationalit\u00e9", "Reconnaissance des films par les Francais"], "y": [0.07894736842105263, 0.1717557251908397], "type": "bar", "uid": "9131b8ae-162c-4d4e-8c57-cd6c5821fb80"}, {"marker": {"color": "rgba(50, 171, 96, 0.6)", "line": {"color": "rgba(50, 171, 96, 1.0)", "width": 1}}, "name": "80% des <br>films reconnus", "orientation": "v", "text": "", "x": ["Reconnaissance des films par les autres nationalit\u00e9", "Reconnaissance des films par les Francais"], "y": [0.05263157894736842, 0.23282442748091603], "type": "bar", "uid": "b84d4cff-d56a-45c9-8429-9de5b59542d0"}, {"marker": {"color": "rgba(128, 0, 128, 0.6)", "line": {"color": "rgba(128, 0, 128, 1.0)", "width": 1}}, "name": "70% des <br>films reconnus", "orientation": "v", "text": "", "x": ["Reconnaissance des films par les autres nationalit\u00e9", "Reconnaissance des films par les Francais"], "y": [0.13157894736842105, 0.1717557251908397], "type": "bar", "uid": "b7613bd2-4419-4968-9103-54d46a49edc6"}, {"marker": {"color": "rgba(219, 64, 82, 0.6)", "line": {"color": "rgba(219, 64, 82, 1.0)", "width": 1}}, "name": "60% des <br>films reconnus", "orientation": "v", "text": "", "x": ["Reconnaissance des films par les autres nationalit\u00e9", "Reconnaissance des films par les Francais"], "y": [0.13157894736842105, 0.1450381679389313], "type": "bar", "uid": "60fa03bb-fb72-45d1-873c-3c3b77e6b641"}, {"marker": {"color": "rgba(0, 128, 128, 0.6)", "line": {"color": "rgba(0, 128, 128, 1.0)", "width": 1}}, "name": "50% des <br>films reconnus", "orientation": "v", "text": "", "x": ["Reconnaissance des films par les autres nationalit\u00e9", "Reconnaissance des films par les Francais"], "y": [0.10526315789473684, 0.05343511450381679], "type": "bar", "uid": "cb8e1097-ae18-419e-b1d7-93764a9643f7"}, {"marker": {"color": "rgba(255, 255, 51, 0.6)", "line": {"color": "rgba(255, 255, 51, 1.0)", "width": 1}}, "name": "40% des <br>films reconnus", "orientation": "v", "text": "", "x": ["Reconnaissance des films par les autres nationalit\u00e9", "Reconnaissance des films par les Francais"], "y": [0.21052631578947367, 0.019083969465648856], "type": "bar", "uid": "91354b06-1592-4822-86fb-6b9195ddad37"}, {"marker": {"color": "rgba(128, 128, 0, 0.6)", "line": {"color": "rgba(128, 128, 0, 1.0)", "width": 1}}, "name": "30% des <br>films reconnus", "orientation": "v", "text": "", "x": ["Reconnaissance des films par les autres nationalit\u00e9", "Reconnaissance des films par les Francais"], "y": [0.05263157894736842, 0.011450381679389313], "type": "bar", "uid": "1ecc5bd7-698e-4be8-8ca7-34eb4441d892"}, {"marker": {"color": "rgba(251, 128, 114, 0.6)", "line": {"color": "rgba(251, 128, 114, 1.0)", "width": 1}}, "name": "20% des <br>films reconnus", "orientation": "v", "text": "", "x": ["Reconnaissance des films par les autres nationalit\u00e9", "Reconnaissance des films par les Francais"], "y": [0.10526315789473684, 0.015267175572519083], "type": "bar", "uid": "f9a03cc7-e3b9-4e4f-bca0-c84776a0267e"}, {"marker": {"color": "rgba(128, 177, 211, 0.6)", "line": {"color": "rgba(128, 177, 211, 1.0)", "width": 1}}, "name": "10% des <br>films reconnus", "orientation": "v", "text": "", "x": ["Reconnaissance des films par les autres nationalit\u00e9", "Reconnaissance des films par les Francais"], "y": [0.05263157894736842, 0.007633587786259542], "type": "bar", "uid": "5623ca8b-90da-4a64-8f07-41c1b322157b"}, {"marker": {"color": "rgba(128, 177, 211, 0.6)", "line": {"color": "rgba(128, 177, 211, 0.8999999999999999)", "width": 1}}, "name": "0% des <br>films reconnus", "orientation": "v", "text": "", "x": ["Reconnaissance des films par les autres nationalit\u00e9", "Reconnaissance des films par les Francais"], "y": [0.05263157894736842, 0.003816793893129771], "type": "bar", "uid": "f7281c5b-c2ae-499e-95c8-b97ae74f375f"}], {"legend": {"bgcolor": "#F5F6F9", "font": {"color": "#4D5663"}}, "paper_bgcolor": "#F5F6F9", "plot_bgcolor": "#F5F6F9", "titlefont": {"color": "#4D5663"}, "xaxis": {"gridcolor": "#E1E5ED", "showgrid": true, "tickfont": {"color": "#4D5663"}, "title": "", "titlefont": {"color": "#4D5663"}, "zerolinecolor": "#E1E5ED"}, "yaxis": {"gridcolor": "#E1E5ED", "showgrid": true, "tickfont": {"color": "#4D5663"}, "title": "", "titlefont": {"color": "#4D5663"}, "zerolinecolor": "#E1E5ED", "tickformat": ".2%"}}, {"showLink": true, "linkText": "Export to plot.ly"})});</script><script type="text/javascript">window.addEventListener("resize", function(){Plotly.Plots.resize(document.getElementById("c22b5a9c-2a7b-42ce-9bc2-7ce541c71507"));});</script>
+<div id="a4cddf32-f798-4400-bc7e-135449938643" style="height: 525px; width: 100%;" class="plotly-graph-div"></div><script type="text/javascript">require(["plotly"], function(Plotly) { window.PLOTLYENV=window.PLOTLYENV || {};window.PLOTLYENV.BASE_URL="https://plot.ly";Plotly.newPlot("a4cddf32-f798-4400-bc7e-135449938643", [{"marker": {"color": "rgba(255, 153, 51, 0.6)", "line": {"color": "rgba(255, 153, 51, 1.0)", "width": 1}}, "name": "Score : 10/10", "orientation": "v", "text": "", "x": ["Reconnaissance des films par les autres nationalit\u00e9", "Reconnaissance des films par les Francais"], "y": [0.02631578947368421, 0.16793893129770993], "type": "bar", "uid": "b8ab8779-37d1-4b5b-926e-b1bf3ff8265e"}, {"marker": {"color": "rgba(55, 128, 191, 0.6)", "line": {"color": "rgba(55, 128, 191, 1.0)", "width": 1}}, "name": "Score : 9/10", "orientation": "v", "text": "", "x": ["Reconnaissance des films par les autres nationalit\u00e9", "Reconnaissance des films par les Francais"], "y": [0.07894736842105263, 0.1717557251908397], "type": "bar", "uid": "ecf29855-deb0-4db8-82b5-3ad649ede363"}, {"marker": {"color": "rgba(50, 171, 96, 0.6)", "line": {"color": "rgba(50, 171, 96, 1.0)", "width": 1}}, "name": "Score : 8/10", "orientation": "v", "text": "", "x": ["Reconnaissance des films par les autres nationalit\u00e9", "Reconnaissance des films par les Francais"], "y": [0.05263157894736842, 0.23282442748091603], "type": "bar", "uid": "3e02a95a-23e2-4af4-acf2-92a65a24d58e"}, {"marker": {"color": "rgba(128, 0, 128, 0.6)", "line": {"color": "rgba(128, 0, 128, 1.0)", "width": 1}}, "name": "Score : 7/10", "orientation": "v", "text": "", "x": ["Reconnaissance des films par les autres nationalit\u00e9", "Reconnaissance des films par les Francais"], "y": [0.13157894736842105, 0.1717557251908397], "type": "bar", "uid": "666a9dc1-657b-4614-b400-7d41fb2f152c"}, {"marker": {"color": "rgba(219, 64, 82, 0.6)", "line": {"color": "rgba(219, 64, 82, 1.0)", "width": 1}}, "name": "Score : 6/10", "orientation": "v", "text": "", "x": ["Reconnaissance des films par les autres nationalit\u00e9", "Reconnaissance des films par les Francais"], "y": [0.13157894736842105, 0.1450381679389313], "type": "bar", "uid": "bae9c43d-cdc1-40b3-aaa4-5ea22ca369a0"}, {"marker": {"color": "rgba(0, 128, 128, 0.6)", "line": {"color": "rgba(0, 128, 128, 1.0)", "width": 1}}, "name": "Score : 5/10", "orientation": "v", "text": "", "x": ["Reconnaissance des films par les autres nationalit\u00e9", "Reconnaissance des films par les Francais"], "y": [0.10526315789473684, 0.05343511450381679], "type": "bar", "uid": "cc564d64-37f4-47dc-a2d4-117822d2fba2"}, {"marker": {"color": "rgba(255, 255, 51, 0.6)", "line": {"color": "rgba(255, 255, 51, 1.0)", "width": 1}}, "name": "Score : 4/10", "orientation": "v", "text": "", "x": ["Reconnaissance des films par les autres nationalit\u00e9", "Reconnaissance des films par les Francais"], "y": [0.21052631578947367, 0.019083969465648856], "type": "bar", "uid": "e595144a-5cc4-4e6f-b9fd-e5ceeefb8beb"}, {"marker": {"color": "rgba(128, 128, 0, 0.6)", "line": {"color": "rgba(128, 128, 0, 1.0)", "width": 1}}, "name": "Score : 3/10", "orientation": "v", "text": "", "x": ["Reconnaissance des films par les autres nationalit\u00e9", "Reconnaissance des films par les Francais"], "y": [0.05263157894736842, 0.011450381679389313], "type": "bar", "uid": "6119ad7c-5977-4e64-8c67-ad7fdd70d4d7"}, {"marker": {"color": "rgba(251, 128, 114, 0.6)", "line": {"color": "rgba(251, 128, 114, 1.0)", "width": 1}}, "name": "Score : 2/10", "orientation": "v", "text": "", "x": ["Reconnaissance des films par les autres nationalit\u00e9", "Reconnaissance des films par les Francais"], "y": [0.10526315789473684, 0.015267175572519083], "type": "bar", "uid": "910d73f2-e52d-4051-a9d3-54cf5f107565"}, {"marker": {"color": "rgba(128, 177, 211, 0.6)", "line": {"color": "rgba(128, 177, 211, 1.0)", "width": 1}}, "name": "Score : 1/10", "orientation": "v", "text": "", "x": ["Reconnaissance des films par les autres nationalit\u00e9", "Reconnaissance des films par les Francais"], "y": [0.05263157894736842, 0.007633587786259542], "type": "bar", "uid": "8427166f-db8a-4877-bd6b-0b3f54fe3ca3"}, {"marker": {"color": "rgba(128, 177, 211, 0.6)", "line": {"color": "rgba(128, 177, 211, 0.8999999999999999)", "width": 1}}, "name": "Score : 0/10", "orientation": "v", "text": "", "x": ["Reconnaissance des films par les autres nationalit\u00e9", "Reconnaissance des films par les Francais"], "y": [0.05263157894736842, 0.003816793893129771], "type": "bar", "uid": "f10468e1-b11e-4a46-8eb3-b8ef535eaa9b"}], {"legend": {"bgcolor": "#F5F6F9", "font": {"color": "#4D5663"}}, "paper_bgcolor": "#F5F6F9", "plot_bgcolor": "#F5F6F9", "titlefont": {"color": "#4D5663"}, "xaxis": {"gridcolor": "#E1E5ED", "showgrid": true, "tickfont": {"color": "#4D5663"}, "title": "", "titlefont": {"color": "#4D5663"}, "zerolinecolor": "#E1E5ED"}, "yaxis": {"gridcolor": "#E1E5ED", "showgrid": true, "tickfont": {"color": "#4D5663"}, "title": "", "titlefont": {"color": "#4D5663"}, "zerolinecolor": "#E1E5ED", "tickformat": ".2%"}}, {"showLink": true, "linkText": "Export to plot.ly"})});</script><script type="text/javascript">window.addEventListener("resize", function(){Plotly.Plots.resize(document.getElementById("a4cddf32-f798-4400-bc7e-135449938643"));});</script>
 </div>
 
 </div>
@@ -18426,7 +18469,7 @@ On va utiliser ANNOVA pour confirmer ou infirmer les hypothèses. De même que p
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[168]:</div>
+<div class="prompt input_prompt">In&nbsp;[302]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">col_to_plot</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;per_total&quot;</span><span class="p">,</span><span class="s2">&quot;gen&quot;</span><span class="p">]</span>
@@ -18445,7 +18488,7 @@ On va utiliser ANNOVA pour confirmer ou infirmer les hypothèses. De même que p
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[168]:</div>
+    <div class="prompt output_prompt">Out[302]:</div>
 
 
 
@@ -18518,47 +18561,56 @@ On va utiliser ANNOVA pour confirmer ou infirmer les hypothèses. De même que p
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[186]:</div>
+<div class="prompt input_prompt">In&nbsp;[313]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_stats_gen</span><span class="p">[</span><span class="n">df_stats_gen</span><span class="p">[</span><span class="s2">&quot;gen&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Z&quot;</span><span class="p">][</span><span class="s2">&quot;per_total&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">treat_ser</span><span class="p">(</span><span class="n">serie</span><span class="p">):</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">0.3</span><span class="p">,</span><span class="mf">0.4</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.6</span><span class="p">,</span><span class="mf">0.7</span><span class="p">,</span><span class="mf">0.8</span><span class="p">,</span><span class="mf">0.9</span><span class="p">,</span><span class="mf">1.0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">a</span><span class="p">:</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">serie</span><span class="o">.</span><span class="n">index</span><span class="p">):</span>
+            <span class="n">serie</span> <span class="o">=</span> <span class="n">serie</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">index</span> <span class="o">=</span><span class="p">[</span><span class="n">k</span><span class="p">]),</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="n">serie</span>
 </pre></div>
 
     </div>
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt output_prompt">Out[186]:</div>
-
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>0.8    4
-0.7    4
-0.6    3
-1.0    1
-Name: per_total, dtype: int64</pre>
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[327]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">col_to_plot</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">,</span><span class="s2">&quot;Y&quot;</span><span class="p">,</span><span class="s2">&quot;X&quot;</span><span class="p">,</span><span class="s2">&quot;BabyBoom&quot;</span><span class="p">]</span>
+<span class="n">df_plot</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">col_to_plot</span><span class="p">:</span>
+    <span class="n">norm</span> <span class="o">=</span> <span class="n">df_stats_gen</span><span class="p">[</span><span class="n">df_stats_gen</span><span class="p">[</span><span class="s2">&quot;gen&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">k</span><span class="p">][</span><span class="s2">&quot;per_total&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+    <span class="n">df_plot</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">treat_ser</span><span class="p">(</span><span class="n">df_stats_gen</span><span class="p">[</span><span class="n">df_stats_gen</span><span class="p">[</span><span class="s2">&quot;gen&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">k</span><span class="p">][</span><span class="s2">&quot;per_total&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">/</span><span class="n">norm</span><span class="p">)</span>
 
-</div>
+<span class="n">df_plot</span><span class="o">=</span> <span class="n">df_plot</span><span class="o">.</span><span class="n">sort_index</span><span class="p">(</span><span class="n">ascending</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+</pre></div>
 
+    </div>
 </div>
 </div>
 
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[189]:</div>
+<div class="prompt input_prompt">In&nbsp;[329]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mi">10</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">)])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">df_plot</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,]</span><span class="o">.</span><span class="n">iplot</span><span class="p">(</span><span class="n">kind</span> <span class="o">=</span> <span class="s2">&quot;bar&quot;</span><span class="p">,</span><span class="n">asFigure</span><span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Score au blind test : </span><span class="si">{}</span><span class="s2">/10&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
+<span class="n">lab_x_axis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+<span class="n">cpt</span> <span class="o">=</span><span class="mi">0</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">fig</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+    <span class="n">k</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="n">cpt</span><span class="p">]</span>
+    <span class="c1">#k.x = lab_x_axis</span>
+    <span class="n">cpt</span><span class="o">+=</span><span class="mi">1</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">tickformat</span> <span class="o">=</span> <span class="s2">&quot;.2%&quot;</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">iplot</span><span class="p">()</span>
 </pre></div>
 
     </div>
@@ -18574,15 +18626,11 @@ Name: per_total, dtype: int64</pre>
     <div class="prompt"></div>
 
 
-<div class="output_subarea output_text output_error">
-<pre>
-<span class="ansi-red-intense-fg ansi-bold">---------------------------------------------------------------------------</span>
-<span class="ansi-red-intense-fg ansi-bold">TypeError</span>                                 Traceback (most recent call last)
-<span class="ansi-green-intense-fg ansi-bold">&lt;ipython-input-189-ccd20104407e&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-intense-fg ansi-bold">()</span>
-<span class="ansi-green-intense-fg ansi-bold">----&gt; 1</span><span class="ansi-yellow-intense-fg ansi-bold"> </span>pd<span class="ansi-yellow-intense-fg ansi-bold">.</span>Series<span class="ansi-yellow-intense-fg ansi-bold">(</span>data <span class="ansi-yellow-intense-fg ansi-bold">=</span> <span class="ansi-yellow-intense-fg ansi-bold">[</span><span class="ansi-cyan-intense-fg ansi-bold">0</span><span class="ansi-yellow-intense-fg ansi-bold">]</span><span class="ansi-yellow-intense-fg ansi-bold">*</span><span class="ansi-cyan-intense-fg ansi-bold">10</span><span class="ansi-yellow-intense-fg ansi-bold">,</span> index<span class="ansi-yellow-intense-fg ansi-bold">=</span><span class="ansi-yellow-intense-fg ansi-bold">[</span>x <span class="ansi-green-intense-fg ansi-bold">for</span> x <span class="ansi-green-intense-fg ansi-bold">in</span> range<span class="ansi-yellow-intense-fg ansi-bold">(</span><span class="ansi-cyan-intense-fg ansi-bold">0</span><span class="ansi-yellow-intense-fg ansi-bold">,</span><span class="ansi-cyan-intense-fg ansi-bold">1</span><span class="ansi-yellow-intense-fg ansi-bold">,</span><span class="ansi-cyan-intense-fg ansi-bold">0.1</span><span class="ansi-yellow-intense-fg ansi-bold">)</span><span class="ansi-yellow-intense-fg ansi-bold">]</span><span class="ansi-yellow-intense-fg ansi-bold">)</span>
 
-<span class="ansi-red-intense-fg ansi-bold">TypeError</span>: &#39;float&#39; object cannot be interpreted as an integer</pre>
+<div class="output_html rendered_html output_subarea ">
+<div id="6df57814-bd82-4141-8174-abb05a9ea308" style="height: 525px; width: 100%;" class="plotly-graph-div"></div><script type="text/javascript">require(["plotly"], function(Plotly) { window.PLOTLYENV=window.PLOTLYENV || {};window.PLOTLYENV.BASE_URL="https://plot.ly";Plotly.newPlot("6df57814-bd82-4141-8174-abb05a9ea308", [{"marker": {"color": "rgba(255, 153, 51, 0.6)", "line": {"color": "rgba(255, 153, 51, 1.0)", "width": 1}}, "name": "Score au blind test : 10/10", "orientation": "v", "text": "", "x": ["Z", "Y", "X", "BabyBoom"], "y": [0.08333333333333333, 0.18220338983050846, 0.02631578947368421, 0.0], "type": "bar", "uid": "53f14305-6136-4b78-8f81-5b6a9c2849f4"}, {"marker": {"color": "rgba(55, 128, 191, 0.6)", "line": {"color": "rgba(55, 128, 191, 1.0)", "width": 1}}, "name": "Score au blind test : 9/10", "orientation": "v", "text": "", "x": ["Z", "Y", "X", "BabyBoom"], "y": [0.0, 0.17796610169491525, 0.13157894736842105, 0.07142857142857142], "type": "bar", "uid": "7bbb187d-c960-4d7e-8212-f797a3c95d08"}, {"marker": {"color": "rgba(50, 171, 96, 0.6)", "line": {"color": "rgba(50, 171, 96, 1.0)", "width": 1}}, "name": "Score au blind test : 8/10", "orientation": "v", "text": "", "x": ["Z", "Y", "X", "BabyBoom"], "y": [0.3333333333333333, 0.22033898305084745, 0.18421052631578946, 0.0], "type": "bar", "uid": "f64ab0dd-1ba2-4ade-9b2d-2c19c954a1d9"}, {"marker": {"color": "rgba(128, 0, 128, 0.6)", "line": {"color": "rgba(128, 0, 128, 1.0)", "width": 1}}, "name": "Score au blind test : 7/10", "orientation": "v", "text": "", "x": ["Z", "Y", "X", "BabyBoom"], "y": [0.3333333333333333, 0.15677966101694915, 0.23684210526315788, 0.0], "type": "bar", "uid": "4b762d24-0ebf-4d02-9a05-2593d7ba3903"}, {"marker": {"color": "rgba(219, 64, 82, 0.6)", "line": {"color": "rgba(219, 64, 82, 1.0)", "width": 1}}, "name": "Score au blind test : 6/10", "orientation": "v", "text": "", "x": ["Z", "Y", "X", "BabyBoom"], "y": [0.25, 0.1228813559322034, 0.23684210526315788, 0.14285714285714285], "type": "bar", "uid": "cdd2bae8-8482-4290-8334-6090aa39995b"}, {"marker": {"color": "rgba(0, 128, 128, 0.6)", "line": {"color": "rgba(0, 128, 128, 1.0)", "width": 1}}, "name": "Score au blind test : 5/10", "orientation": "v", "text": "", "x": ["Z", "Y", "X", "BabyBoom"], "y": [0.0, 0.05084745762711865, 0.13157894736842105, 0.07142857142857142], "type": "bar", "uid": "7a7aa89c-ab61-49be-936a-bf979d0305a8"}, {"marker": {"color": "rgba(255, 255, 51, 0.6)", "line": {"color": "rgba(255, 255, 51, 1.0)", "width": 1}}, "name": "Score au blind test : 4/10", "orientation": "v", "text": "", "x": ["Z", "Y", "X", "BabyBoom"], "y": [0.0, 0.0423728813559322, 0.0, 0.21428571428571427], "type": "bar", "uid": "860cbd09-5883-4299-a1da-63dc74a71408"}, {"marker": {"color": "rgba(128, 128, 0, 0.6)", "line": {"color": "rgba(128, 128, 0, 1.0)", "width": 1}}, "name": "Score au blind test : 3/10", "orientation": "v", "text": "", "x": ["Z", "Y", "X", "BabyBoom"], "y": [0.0, 0.012711864406779662, 0.0, 0.14285714285714285], "type": "bar", "uid": "34c40626-0676-4e37-a43f-60e0dd3fdea9"}, {"marker": {"color": "rgba(251, 128, 114, 0.6)", "line": {"color": "rgba(251, 128, 114, 1.0)", "width": 1}}, "name": "Score au blind test : 2/10", "orientation": "v", "text": "", "x": ["Z", "Y", "X", "BabyBoom"], "y": [0.0, 0.01694915254237288, 0.05263157894736842, 0.14285714285714285], "type": "bar", "uid": "e7fdb593-f87f-4831-9f67-71beba32a81f"}, {"marker": {"color": "rgba(128, 177, 211, 0.6)", "line": {"color": "rgba(128, 177, 211, 1.0)", "width": 1}}, "name": "Score au blind test : 1/10", "orientation": "v", "text": "", "x": ["Z", "Y", "X", "BabyBoom"], "y": [0.0, 0.00847457627118644, 0.0, 0.14285714285714285], "type": "bar", "uid": "c567e59a-939c-4020-b83d-deaf1a731a59"}, {"marker": {"color": "rgba(128, 177, 211, 0.6)", "line": {"color": "rgba(128, 177, 211, 0.8999999999999999)", "width": 1}}, "name": "Score au blind test : 0/10", "orientation": "v", "text": "", "x": ["Z", "Y", "X", "BabyBoom"], "y": [0.0, 0.00847457627118644, 0.0, 0.07142857142857142], "type": "bar", "uid": "e71a648d-4f52-4934-8a9e-c9f168a63cd8"}], {"legend": {"bgcolor": "#F5F6F9", "font": {"color": "#4D5663"}}, "paper_bgcolor": "#F5F6F9", "plot_bgcolor": "#F5F6F9", "titlefont": {"color": "#4D5663"}, "xaxis": {"gridcolor": "#E1E5ED", "showgrid": true, "tickfont": {"color": "#4D5663"}, "title": "", "titlefont": {"color": "#4D5663"}, "zerolinecolor": "#E1E5ED"}, "yaxis": {"gridcolor": "#E1E5ED", "showgrid": true, "tickfont": {"color": "#4D5663"}, "title": "", "titlefont": {"color": "#4D5663"}, "zerolinecolor": "#E1E5ED", "tickformat": ".2%"}}, {"showLink": true, "linkText": "Export to plot.ly"})});</script><script type="text/javascript">window.addEventListener("resize", function(){Plotly.Plots.resize(document.getElementById("6df57814-bd82-4141-8174-abb05a9ea308"));});</script>
 </div>
+
 </div>
 
 </div>
@@ -18591,18 +18639,29 @@ Name: per_total, dtype: int64</pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[182]:</div>
+<div class="prompt input_prompt">In&nbsp;[336]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">col_to_plot</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">,</span><span class="s2">&quot;Y&quot;</span><span class="p">,</span><span class="s2">&quot;X&quot;</span><span class="p">,</span><span class="s2">&quot;BabyBoom&quot;</span><span class="p">]</span>
-<span class="n">df_plot</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
-<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">col_to_plot</span><span class="p">:</span>
-    
-    <span class="n">norm</span> <span class="o">=</span> <span class="n">df_stats_gen</span><span class="p">[</span><span class="n">df_stats_gen</span><span class="p">[</span><span class="s2">&quot;gen&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">k</span><span class="p">][</span><span class="s2">&quot;per_total&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
-    <span class="n">df_plot</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_stats_gen</span><span class="p">[</span><span class="n">df_stats_gen</span><span class="p">[</span><span class="s2">&quot;gen&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">k</span><span class="p">][</span><span class="s2">&quot;per_total&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">/</span><span class="n">norm</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">gens</span> <span class="o">=</span><span class="p">(</span>
+    <span class="nb">len</span><span class="p">(</span><span class="n">df_stats_gen</span><span class="p">[</span><span class="n">df_stats_gen</span><span class="p">[</span><span class="s2">&quot;gen&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;X&quot;</span><span class="p">]),</span>
+    <span class="nb">len</span><span class="p">(</span><span class="n">df_stats_gen</span><span class="p">[</span><span class="n">df_stats_gen</span><span class="p">[</span><span class="s2">&quot;gen&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Y&quot;</span><span class="p">]),</span>
+    <span class="nb">len</span><span class="p">(</span><span class="n">df_stats_gen</span><span class="p">[</span><span class="n">df_stats_gen</span><span class="p">[</span><span class="s2">&quot;gen&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Z&quot;</span><span class="p">]),</span>
+    <span class="nb">len</span><span class="p">(</span><span class="n">df_stats_gen</span><span class="p">[</span><span class="n">df_stats_gen</span><span class="p">[</span><span class="s2">&quot;gen&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;BabyBoom&quot;</span><span class="p">])</span>
+<span class="p">)</span>
+</pre></div>
 
-<span class="n">df_plot</span> <span class="o">=</span> <span class="n">df_plot</span><span class="o">.</span><span class="n">sort_index</span><span class="p">(</span><span class="n">ascending</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
-<span class="n">df_plot</span>
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[337]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;Il y a </span><span class="si">{}</span><span class="s2"> personnes dans la génération X, </span><span class="si">{}</span><span class="s2"> dans la génération Y, </span><span class="si">{}</span><span class="s2"> dans la génération Z et </span><span class="si">{}</span><span class="s2"> dans la génération BabyBoom &quot;&quot;&quot;</span><span class="o">.</span>
+     <span class="nb">format</span><span class="p">(</span><span class="n">gens</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">gens</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">gens</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">gens</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
 </pre></div>
 
     </div>
@@ -18615,7 +18674,54 @@ Name: per_total, dtype: int64</pre>
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[182]:</div>
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Il y a 38 personnes dans la génération X, 236 dans la génération Y, 12 dans la génération Z et 14 dans la génération BabyBoom 
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="alert alert-danger">
+On remarque que la génération Y est celle qui est la plus représenté. Cela introduit une forte erreur pour le test suivant car la génération Z et la génération Babyboom sont sous-représenté. Ainsi les tests de Normalités pour les distributions de la génération Z et Babyboom peuvent être remis en cause (annulant donc la possibilité d'ANNOVA).
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Application-des-tests">Application des tests<a class="anchor-link" href="#Application-des-tests">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[340]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_stats_gen</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[340]:</div>
 
 
 
@@ -18638,40 +18744,35 @@ Name: per_total, dtype: int64</pre>
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>1.0</th>
-      <th>0.8</th>
-      <th>0.7</th>
-      <th>0.6</th>
+      <th>per_total</th>
+      <th>gen</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th>Z</th>
-      <td>0.083333</td>
-      <td>0.333333</td>
-      <td>0.333333</td>
-      <td>0.250000</td>
+      <th>0</th>
+      <td>0.8</td>
+      <td>Y</td>
     </tr>
     <tr>
-      <th>Y</th>
-      <td>0.182203</td>
-      <td>0.220339</td>
-      <td>0.156780</td>
-      <td>0.122881</td>
+      <th>1</th>
+      <td>1.0</td>
+      <td>Y</td>
     </tr>
     <tr>
-      <th>X</th>
-      <td>0.026316</td>
-      <td>0.184211</td>
-      <td>0.236842</td>
-      <td>0.236842</td>
+      <th>2</th>
+      <td>0.9</td>
+      <td>Y</td>
     </tr>
     <tr>
-      <th>BabyBoom</th>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>0.142857</td>
+      <th>3</th>
+      <td>0.6</td>
+      <td>Y</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1.0</td>
+      <td>Y</td>
     </tr>
   </tbody>
 </table>
@@ -18683,6 +18784,285 @@ Name: per_total, dtype: int64</pre>
 </div>
 </div>
 
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[367]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">geen</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">,</span><span class="s2">&quot;Y&quot;</span><span class="p">,</span><span class="s2">&quot;X&quot;</span><span class="p">,</span><span class="s2">&quot;BabyBoom&quot;</span><span class="p">]</span>
+<span class="n">dictt_an</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span> <span class="p">:</span><span class="n">df_stats_gen</span><span class="p">[</span><span class="n">df_stats_gen</span><span class="p">[</span><span class="s2">&quot;gen&quot;</span><span class="p">]</span><span class="o">==</span><span class="n">k</span><span class="p">][</span><span class="s2">&quot;per_total&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">geen</span><span class="p">}</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[368]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">anova_mean</span><span class="p">(</span><span class="n">dictt_an</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>La moyenne de Z est de 0.73
+La moyenne de Y est de 0.75
+La moyenne de X est de 0.68
+La moyenne de BabyBoom est de 0.36
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[414]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">ano_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">dictt_an</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">dictt_an</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ano_data</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">,</span><span class="s2">&quot;Y&quot;</span><span class="p">,</span><span class="s2">&quot;X&quot;</span><span class="p">,</span><span class="s2">&quot;BabyBoom&quot;</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[415]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">ano_data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[415]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Z</th>
+      <th>Y</th>
+      <th>X</th>
+      <th>BabyBoom</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>NaN</td>
+      <td>0.8</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>NaN</td>
+      <td>1.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>NaN</td>
+      <td>0.9</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>NaN</td>
+      <td>0.6</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>NaN</td>
+      <td>1.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[416]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">outcome_variable</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">model_name</span> <span class="o">=</span> <span class="n">ols</span><span class="p">(</span><span class="s1">&#39;X ~  Y + Z + BabyBoom&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">ano_data</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-intense-fg ansi-bold">---------------------------------------------------------------------------</span>
+<span class="ansi-red-intense-fg ansi-bold">ValueError</span>                                Traceback (most recent call last)
+<span class="ansi-green-intense-fg ansi-bold">&lt;ipython-input-416-a6c6732f4897&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-intense-fg ansi-bold">()</span>
+<span class="ansi-green-fg">      1</span> outcome_variable <span class="ansi-yellow-intense-fg ansi-bold">=</span> <span class="ansi-cyan-intense-fg ansi-bold">0</span>
+<span class="ansi-green-intense-fg ansi-bold">----&gt; 2</span><span class="ansi-yellow-intense-fg ansi-bold"> </span>model_name <span class="ansi-yellow-intense-fg ansi-bold">=</span> ols<span class="ansi-yellow-intense-fg ansi-bold">(</span><span class="ansi-blue-intense-fg ansi-bold">&#39;X ~  Y + Z + BabyBoom&#39;</span><span class="ansi-yellow-intense-fg ansi-bold">,</span> data<span class="ansi-yellow-intense-fg ansi-bold">=</span>ano_data<span class="ansi-yellow-intense-fg ansi-bold">)</span><span class="ansi-yellow-intense-fg ansi-bold">.</span>fit<span class="ansi-yellow-intense-fg ansi-bold">(</span><span class="ansi-yellow-intense-fg ansi-bold">)</span>
+
+<span class="ansi-green-intense-fg ansi-bold">C:\ProgramData\Anaconda3\lib\site-packages\statsmodels\base\model.py</span> in <span class="ansi-cyan-fg">from_formula</span><span class="ansi-blue-intense-fg ansi-bold">(cls, formula, data, subset, drop_cols, *args, **kwargs)</span>
+<span class="ansi-green-fg">    172</span>                        <span class="ansi-blue-intense-fg ansi-bold">&#39;formula&#39;</span><span class="ansi-yellow-intense-fg ansi-bold">:</span> formula<span class="ansi-yellow-intense-fg ansi-bold">,</span>  <span class="ansi-red-intense-fg ansi-bold"># attach formula for unpckling</span>
+<span class="ansi-green-fg">    173</span>                        &#39;design_info&#39;: design_info})
+<span class="ansi-green-intense-fg ansi-bold">--&gt; 174</span><span class="ansi-yellow-intense-fg ansi-bold">         </span>mod <span class="ansi-yellow-intense-fg ansi-bold">=</span> cls<span class="ansi-yellow-intense-fg ansi-bold">(</span>endog<span class="ansi-yellow-intense-fg ansi-bold">,</span> exog<span class="ansi-yellow-intense-fg ansi-bold">,</span> <span class="ansi-yellow-intense-fg ansi-bold">*</span>args<span class="ansi-yellow-intense-fg ansi-bold">,</span> <span class="ansi-yellow-intense-fg ansi-bold">**</span>kwargs<span class="ansi-yellow-intense-fg ansi-bold">)</span>
+<span class="ansi-green-fg">    175</span>         mod<span class="ansi-yellow-intense-fg ansi-bold">.</span>formula <span class="ansi-yellow-intense-fg ansi-bold">=</span> formula
+<span class="ansi-green-fg">    176</span> 
+
+<span class="ansi-green-intense-fg ansi-bold">C:\ProgramData\Anaconda3\lib\site-packages\statsmodels\regression\linear_model.py</span> in <span class="ansi-cyan-fg">__init__</span><span class="ansi-blue-intense-fg ansi-bold">(self, endog, exog, missing, hasconst, **kwargs)</span>
+<span class="ansi-green-fg">    815</span>                  **kwargs):
+<span class="ansi-green-fg">    816</span>         super(OLS, self).__init__(endog, exog, missing=missing,
+<span class="ansi-green-intense-fg ansi-bold">--&gt; 817</span><span class="ansi-yellow-intense-fg ansi-bold">                                   hasconst=hasconst, **kwargs)
+</span><span class="ansi-green-fg">    818</span>         <span class="ansi-green-intense-fg ansi-bold">if</span> <span class="ansi-blue-intense-fg ansi-bold">&#34;weights&#34;</span> <span class="ansi-green-intense-fg ansi-bold">in</span> self<span class="ansi-yellow-intense-fg ansi-bold">.</span>_init_keys<span class="ansi-yellow-intense-fg ansi-bold">:</span>
+<span class="ansi-green-fg">    819</span>             self<span class="ansi-yellow-intense-fg ansi-bold">.</span>_init_keys<span class="ansi-yellow-intense-fg ansi-bold">.</span>remove<span class="ansi-yellow-intense-fg ansi-bold">(</span><span class="ansi-blue-intense-fg ansi-bold">&#34;weights&#34;</span><span class="ansi-yellow-intense-fg ansi-bold">)</span>
+
+<span class="ansi-green-intense-fg ansi-bold">C:\ProgramData\Anaconda3\lib\site-packages\statsmodels\regression\linear_model.py</span> in <span class="ansi-cyan-fg">__init__</span><span class="ansi-blue-intense-fg ansi-bold">(self, endog, exog, weights, missing, hasconst, **kwargs)</span>
+<span class="ansi-green-fg">    661</span>             weights <span class="ansi-yellow-intense-fg ansi-bold">=</span> weights<span class="ansi-yellow-intense-fg ansi-bold">.</span>squeeze<span class="ansi-yellow-intense-fg ansi-bold">(</span><span class="ansi-yellow-intense-fg ansi-bold">)</span>
+<span class="ansi-green-fg">    662</span>         super(WLS, self).__init__(endog, exog, missing=missing,
+<span class="ansi-green-intense-fg ansi-bold">--&gt; 663</span><span class="ansi-yellow-intense-fg ansi-bold">                                   weights=weights, hasconst=hasconst, **kwargs)
+</span><span class="ansi-green-fg">    664</span>         nobs <span class="ansi-yellow-intense-fg ansi-bold">=</span> self<span class="ansi-yellow-intense-fg ansi-bold">.</span>exog<span class="ansi-yellow-intense-fg ansi-bold">.</span>shape<span class="ansi-yellow-intense-fg ansi-bold">[</span><span class="ansi-cyan-intense-fg ansi-bold">0</span><span class="ansi-yellow-intense-fg ansi-bold">]</span>
+<span class="ansi-green-fg">    665</span>         weights <span class="ansi-yellow-intense-fg ansi-bold">=</span> self<span class="ansi-yellow-intense-fg ansi-bold">.</span>weights
+
+<span class="ansi-green-intense-fg ansi-bold">C:\ProgramData\Anaconda3\lib\site-packages\statsmodels\regression\linear_model.py</span> in <span class="ansi-cyan-fg">__init__</span><span class="ansi-blue-intense-fg ansi-bold">(self, endog, exog, **kwargs)</span>
+<span class="ansi-green-fg">    177</span>     &#34;&#34;&#34;
+<span class="ansi-green-fg">    178</span>     <span class="ansi-green-intense-fg ansi-bold">def</span> __init__<span class="ansi-yellow-intense-fg ansi-bold">(</span>self<span class="ansi-yellow-intense-fg ansi-bold">,</span> endog<span class="ansi-yellow-intense-fg ansi-bold">,</span> exog<span class="ansi-yellow-intense-fg ansi-bold">,</span> <span class="ansi-yellow-intense-fg ansi-bold">**</span>kwargs<span class="ansi-yellow-intense-fg ansi-bold">)</span><span class="ansi-yellow-intense-fg ansi-bold">:</span>
+<span class="ansi-green-intense-fg ansi-bold">--&gt; 179</span><span class="ansi-yellow-intense-fg ansi-bold">         </span>super<span class="ansi-yellow-intense-fg ansi-bold">(</span>RegressionModel<span class="ansi-yellow-intense-fg ansi-bold">,</span> self<span class="ansi-yellow-intense-fg ansi-bold">)</span><span class="ansi-yellow-intense-fg ansi-bold">.</span>__init__<span class="ansi-yellow-intense-fg ansi-bold">(</span>endog<span class="ansi-yellow-intense-fg ansi-bold">,</span> exog<span class="ansi-yellow-intense-fg ansi-bold">,</span> <span class="ansi-yellow-intense-fg ansi-bold">**</span>kwargs<span class="ansi-yellow-intense-fg ansi-bold">)</span>
+<span class="ansi-green-fg">    180</span>         self<span class="ansi-yellow-intense-fg ansi-bold">.</span>_data_attr<span class="ansi-yellow-intense-fg ansi-bold">.</span>extend<span class="ansi-yellow-intense-fg ansi-bold">(</span><span class="ansi-yellow-intense-fg ansi-bold">[</span><span class="ansi-blue-intense-fg ansi-bold">&#39;pinv_wexog&#39;</span><span class="ansi-yellow-intense-fg ansi-bold">,</span> <span class="ansi-blue-intense-fg ansi-bold">&#39;wendog&#39;</span><span class="ansi-yellow-intense-fg ansi-bold">,</span> <span class="ansi-blue-intense-fg ansi-bold">&#39;wexog&#39;</span><span class="ansi-yellow-intense-fg ansi-bold">,</span> <span class="ansi-blue-intense-fg ansi-bold">&#39;weights&#39;</span><span class="ansi-yellow-intense-fg ansi-bold">]</span><span class="ansi-yellow-intense-fg ansi-bold">)</span>
+<span class="ansi-green-fg">    181</span> 
+
+<span class="ansi-green-intense-fg ansi-bold">C:\ProgramData\Anaconda3\lib\site-packages\statsmodels\base\model.py</span> in <span class="ansi-cyan-fg">__init__</span><span class="ansi-blue-intense-fg ansi-bold">(self, endog, exog, **kwargs)</span>
+<span class="ansi-green-fg">    210</span> 
+<span class="ansi-green-fg">    211</span>     <span class="ansi-green-intense-fg ansi-bold">def</span> __init__<span class="ansi-yellow-intense-fg ansi-bold">(</span>self<span class="ansi-yellow-intense-fg ansi-bold">,</span> endog<span class="ansi-yellow-intense-fg ansi-bold">,</span> exog<span class="ansi-yellow-intense-fg ansi-bold">=</span><span class="ansi-green-intense-fg ansi-bold">None</span><span class="ansi-yellow-intense-fg ansi-bold">,</span> <span class="ansi-yellow-intense-fg ansi-bold">**</span>kwargs<span class="ansi-yellow-intense-fg ansi-bold">)</span><span class="ansi-yellow-intense-fg ansi-bold">:</span>
+<span class="ansi-green-intense-fg ansi-bold">--&gt; 212</span><span class="ansi-yellow-intense-fg ansi-bold">         </span>super<span class="ansi-yellow-intense-fg ansi-bold">(</span>LikelihoodModel<span class="ansi-yellow-intense-fg ansi-bold">,</span> self<span class="ansi-yellow-intense-fg ansi-bold">)</span><span class="ansi-yellow-intense-fg ansi-bold">.</span>__init__<span class="ansi-yellow-intense-fg ansi-bold">(</span>endog<span class="ansi-yellow-intense-fg ansi-bold">,</span> exog<span class="ansi-yellow-intense-fg ansi-bold">,</span> <span class="ansi-yellow-intense-fg ansi-bold">**</span>kwargs<span class="ansi-yellow-intense-fg ansi-bold">)</span>
+<span class="ansi-green-fg">    213</span>         self<span class="ansi-yellow-intense-fg ansi-bold">.</span>initialize<span class="ansi-yellow-intense-fg ansi-bold">(</span><span class="ansi-yellow-intense-fg ansi-bold">)</span>
+<span class="ansi-green-fg">    214</span> 
+
+<span class="ansi-green-intense-fg ansi-bold">C:\ProgramData\Anaconda3\lib\site-packages\statsmodels\base\model.py</span> in <span class="ansi-cyan-fg">__init__</span><span class="ansi-blue-intense-fg ansi-bold">(self, endog, exog, **kwargs)</span>
+<span class="ansi-green-fg">     62</span>         hasconst <span class="ansi-yellow-intense-fg ansi-bold">=</span> kwargs<span class="ansi-yellow-intense-fg ansi-bold">.</span>pop<span class="ansi-yellow-intense-fg ansi-bold">(</span><span class="ansi-blue-intense-fg ansi-bold">&#39;hasconst&#39;</span><span class="ansi-yellow-intense-fg ansi-bold">,</span> <span class="ansi-green-intense-fg ansi-bold">None</span><span class="ansi-yellow-intense-fg ansi-bold">)</span>
+<span class="ansi-green-fg">     63</span>         self.data = self._handle_data(endog, exog, missing, hasconst,
+<span class="ansi-green-intense-fg ansi-bold">---&gt; 64</span><span class="ansi-yellow-intense-fg ansi-bold">                                       **kwargs)
+</span><span class="ansi-green-fg">     65</span>         self<span class="ansi-yellow-intense-fg ansi-bold">.</span>k_constant <span class="ansi-yellow-intense-fg ansi-bold">=</span> self<span class="ansi-yellow-intense-fg ansi-bold">.</span>data<span class="ansi-yellow-intense-fg ansi-bold">.</span>k_constant
+<span class="ansi-green-fg">     66</span>         self<span class="ansi-yellow-intense-fg ansi-bold">.</span>exog <span class="ansi-yellow-intense-fg ansi-bold">=</span> self<span class="ansi-yellow-intense-fg ansi-bold">.</span>data<span class="ansi-yellow-intense-fg ansi-bold">.</span>exog
+
+<span class="ansi-green-intense-fg ansi-bold">C:\ProgramData\Anaconda3\lib\site-packages\statsmodels\base\model.py</span> in <span class="ansi-cyan-fg">_handle_data</span><span class="ansi-blue-intense-fg ansi-bold">(self, endog, exog, missing, hasconst, **kwargs)</span>
+<span class="ansi-green-fg">     85</span> 
+<span class="ansi-green-fg">     86</span>     <span class="ansi-green-intense-fg ansi-bold">def</span> _handle_data<span class="ansi-yellow-intense-fg ansi-bold">(</span>self<span class="ansi-yellow-intense-fg ansi-bold">,</span> endog<span class="ansi-yellow-intense-fg ansi-bold">,</span> exog<span class="ansi-yellow-intense-fg ansi-bold">,</span> missing<span class="ansi-yellow-intense-fg ansi-bold">,</span> hasconst<span class="ansi-yellow-intense-fg ansi-bold">,</span> <span class="ansi-yellow-intense-fg ansi-bold">**</span>kwargs<span class="ansi-yellow-intense-fg ansi-bold">)</span><span class="ansi-yellow-intense-fg ansi-bold">:</span>
+<span class="ansi-green-intense-fg ansi-bold">---&gt; 87</span><span class="ansi-yellow-intense-fg ansi-bold">         </span>data <span class="ansi-yellow-intense-fg ansi-bold">=</span> handle_data<span class="ansi-yellow-intense-fg ansi-bold">(</span>endog<span class="ansi-yellow-intense-fg ansi-bold">,</span> exog<span class="ansi-yellow-intense-fg ansi-bold">,</span> missing<span class="ansi-yellow-intense-fg ansi-bold">,</span> hasconst<span class="ansi-yellow-intense-fg ansi-bold">,</span> <span class="ansi-yellow-intense-fg ansi-bold">**</span>kwargs<span class="ansi-yellow-intense-fg ansi-bold">)</span>
+<span class="ansi-green-fg">     88</span>         <span class="ansi-red-intense-fg ansi-bold"># kwargs arrays could have changed, easier to just attach here</span>
+<span class="ansi-green-fg">     89</span>         <span class="ansi-green-intense-fg ansi-bold">for</span> key <span class="ansi-green-intense-fg ansi-bold">in</span> kwargs<span class="ansi-yellow-intense-fg ansi-bold">:</span>
+
+<span class="ansi-green-intense-fg ansi-bold">C:\ProgramData\Anaconda3\lib\site-packages\statsmodels\base\data.py</span> in <span class="ansi-cyan-fg">handle_data</span><span class="ansi-blue-intense-fg ansi-bold">(endog, exog, missing, hasconst, **kwargs)</span>
+<span class="ansi-green-fg">    631</span>     klass <span class="ansi-yellow-intense-fg ansi-bold">=</span> handle_data_class_factory<span class="ansi-yellow-intense-fg ansi-bold">(</span>endog<span class="ansi-yellow-intense-fg ansi-bold">,</span> exog<span class="ansi-yellow-intense-fg ansi-bold">)</span>
+<span class="ansi-green-fg">    632</span>     return klass(endog, exog=exog, missing=missing, hasconst=hasconst,
+<span class="ansi-green-intense-fg ansi-bold">--&gt; 633</span><span class="ansi-yellow-intense-fg ansi-bold">                  **kwargs)
+</span>
+<span class="ansi-green-intense-fg ansi-bold">C:\ProgramData\Anaconda3\lib\site-packages\statsmodels\base\data.py</span> in <span class="ansi-cyan-fg">__init__</span><span class="ansi-blue-intense-fg ansi-bold">(self, endog, exog, missing, hasconst, **kwargs)</span>
+<span class="ansi-green-fg">     77</span> 
+<span class="ansi-green-fg">     78</span>         <span class="ansi-red-intense-fg ansi-bold"># this has side-effects, attaches k_constant and const_idx</span>
+<span class="ansi-green-intense-fg ansi-bold">---&gt; 79</span><span class="ansi-yellow-intense-fg ansi-bold">         </span>self<span class="ansi-yellow-intense-fg ansi-bold">.</span>_handle_constant<span class="ansi-yellow-intense-fg ansi-bold">(</span>hasconst<span class="ansi-yellow-intense-fg ansi-bold">)</span>
+<span class="ansi-green-fg">     80</span>         self<span class="ansi-yellow-intense-fg ansi-bold">.</span>_check_integrity<span class="ansi-yellow-intense-fg ansi-bold">(</span><span class="ansi-yellow-intense-fg ansi-bold">)</span>
+<span class="ansi-green-fg">     81</span>         self<span class="ansi-yellow-intense-fg ansi-bold">.</span>_cache <span class="ansi-yellow-intense-fg ansi-bold">=</span> resettable_cache<span class="ansi-yellow-intense-fg ansi-bold">(</span><span class="ansi-yellow-intense-fg ansi-bold">)</span>
+
+<span class="ansi-green-intense-fg ansi-bold">C:\ProgramData\Anaconda3\lib\site-packages\statsmodels\base\data.py</span> in <span class="ansi-cyan-fg">_handle_constant</span><span class="ansi-blue-intense-fg ansi-bold">(self, hasconst)</span>
+<span class="ansi-green-fg">    129</span>             <span class="ansi-red-intense-fg ansi-bold"># detect where the constant is</span>
+<span class="ansi-green-fg">    130</span>             check_implicit <span class="ansi-yellow-intense-fg ansi-bold">=</span> <span class="ansi-green-intense-fg ansi-bold">False</span>
+<span class="ansi-green-intense-fg ansi-bold">--&gt; 131</span><span class="ansi-yellow-intense-fg ansi-bold">             </span>ptp_ <span class="ansi-yellow-intense-fg ansi-bold">=</span> self<span class="ansi-yellow-intense-fg ansi-bold">.</span>exog<span class="ansi-yellow-intense-fg ansi-bold">.</span>ptp<span class="ansi-yellow-intense-fg ansi-bold">(</span>axis<span class="ansi-yellow-intense-fg ansi-bold">=</span><span class="ansi-cyan-intense-fg ansi-bold">0</span><span class="ansi-yellow-intense-fg ansi-bold">)</span>
+<span class="ansi-green-fg">    132</span>             <span class="ansi-green-intense-fg ansi-bold">if</span> <span class="ansi-green-intense-fg ansi-bold">not</span> np<span class="ansi-yellow-intense-fg ansi-bold">.</span>isfinite<span class="ansi-yellow-intense-fg ansi-bold">(</span>ptp_<span class="ansi-yellow-intense-fg ansi-bold">)</span><span class="ansi-yellow-intense-fg ansi-bold">.</span>all<span class="ansi-yellow-intense-fg ansi-bold">(</span><span class="ansi-yellow-intense-fg ansi-bold">)</span><span class="ansi-yellow-intense-fg ansi-bold">:</span>
+<span class="ansi-green-fg">    133</span>                 <span class="ansi-green-intense-fg ansi-bold">raise</span> MissingDataError<span class="ansi-yellow-intense-fg ansi-bold">(</span><span class="ansi-blue-intense-fg ansi-bold">&#39;exog contains inf or nans&#39;</span><span class="ansi-yellow-intense-fg ansi-bold">)</span>
+
+<span class="ansi-green-intense-fg ansi-bold">C:\ProgramData\Anaconda3\lib\site-packages\numpy\core\_methods.py</span> in <span class="ansi-cyan-fg">_ptp</span><span class="ansi-blue-intense-fg ansi-bold">(a, axis, out, keepdims)</span>
+<span class="ansi-green-fg">    151</span> <span class="ansi-green-intense-fg ansi-bold">def</span> _ptp<span class="ansi-yellow-intense-fg ansi-bold">(</span>a<span class="ansi-yellow-intense-fg ansi-bold">,</span> axis<span class="ansi-yellow-intense-fg ansi-bold">=</span><span class="ansi-green-intense-fg ansi-bold">None</span><span class="ansi-yellow-intense-fg ansi-bold">,</span> out<span class="ansi-yellow-intense-fg ansi-bold">=</span><span class="ansi-green-intense-fg ansi-bold">None</span><span class="ansi-yellow-intense-fg ansi-bold">,</span> keepdims<span class="ansi-yellow-intense-fg ansi-bold">=</span><span class="ansi-green-intense-fg ansi-bold">False</span><span class="ansi-yellow-intense-fg ansi-bold">)</span><span class="ansi-yellow-intense-fg ansi-bold">:</span>
+<span class="ansi-green-fg">    152</span>     return um.subtract(
+<span class="ansi-green-intense-fg ansi-bold">--&gt; 153</span><span class="ansi-yellow-intense-fg ansi-bold">         </span>umr_maximum<span class="ansi-yellow-intense-fg ansi-bold">(</span>a<span class="ansi-yellow-intense-fg ansi-bold">,</span> axis<span class="ansi-yellow-intense-fg ansi-bold">,</span> <span class="ansi-green-intense-fg ansi-bold">None</span><span class="ansi-yellow-intense-fg ansi-bold">,</span> out<span class="ansi-yellow-intense-fg ansi-bold">,</span> keepdims<span class="ansi-yellow-intense-fg ansi-bold">)</span><span class="ansi-yellow-intense-fg ansi-bold">,</span>
+<span class="ansi-green-fg">    154</span>         umr_minimum<span class="ansi-yellow-intense-fg ansi-bold">(</span>a<span class="ansi-yellow-intense-fg ansi-bold">,</span> axis<span class="ansi-yellow-intense-fg ansi-bold">,</span> <span class="ansi-green-intense-fg ansi-bold">None</span><span class="ansi-yellow-intense-fg ansi-bold">,</span> <span class="ansi-green-intense-fg ansi-bold">None</span><span class="ansi-yellow-intense-fg ansi-bold">,</span> keepdims<span class="ansi-yellow-intense-fg ansi-bold">)</span><span class="ansi-yellow-intense-fg ansi-bold">,</span>
+<span class="ansi-green-fg">    155</span>         out
+
+<span class="ansi-red-intense-fg ansi-bold">ValueError</span>: zero-size array to reduction operation maximum which has no identity</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="alert alert-success">
+Bien que les échantillons soient peu réprésentatif de toutes les générations, le test ANOVA infirme l'hypothèse de base. En effet la p-value est bien inférieur à 0.05. Donc les moyenne sont différentes.
+</div>
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
