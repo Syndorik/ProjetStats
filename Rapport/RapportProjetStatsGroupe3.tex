@@ -371,8 +371,173 @@ Il y a 77 échantillon dans la catégorie More than 20 years old\\
 Il y a 212 échantillon dans la catégorie 0-10 years old\\
 Il y a 268 échantillon dans la catégorie 11-20 years old\\
 \alertinfo{On peut remarquer que le nombre d'échantillon est cette fois-ci suffisant pour appliquer un test ANOVA.}
-La moyenne de 0-10 years old est de 0.90. La moyenne de 11-20 years old est de 0.79. La moyenne de More than 20 years old est de 0.68.
+La moyenne de 0-10 years old est de 0.90. La moyenne de 11-20 years old est de 0.79. La moyenne de More than 20 years old est de 0.68.\\
+Après application du test, nous obtenons les valeurs suivantes : $pvalue =   7.3964e^{-11}$, $t = 24.337$.\\
+En appliquant le test on remarque qu'on ne peut accepter l'hypothèse nulle car la p-value est bien inférieure à 0.05. Ainsi, au vu des moyennes calculés précédemment, on peut déjà conclure que les personnes ayant le film dans leurs 20 ans sont moins susceptible de reconnaître un film considéré dans ce sondage comme "mémorable”.
+\alertinfo{Nous allons appliquer un test de student deux à deux sur les population More than 20 years old, 0-10 years old et 11-20 years old, afin de déterminer lesquels diffèrent et le possible classement que l'on peut faire.}
+\begin{itemize}
+	\item \textbf{Student pour 0-10 years et 11-20 years: } Après application du test, nous obtenons les valeurs suivantes : $pvalue =   1.4293e^{-6}$, $t = 4.8826$. L'intervalle de confiance des différences de moyenne est de : [-0.15,-0.06].\\
+	\item \textbf{Student pour 11-20 years et more than 20 year: }Après application du test, nous obtenons les valeurs suivantes : $pvalue =   0.001$, $t = 3.1913$.L'intervalle de confiance des différences de moyenne est de : [-0.19,-0.03].\\
+\end{itemize}
+\alertsuccess{Les 2 tests de Student réalisés ont une p-value inférieure à 5\%. Nous rejetons donc l'hypothèse nulle pour chaque test. Ainsi, comme le laissait suggérer l'ANOVA, nous pouvons conclure que plus une personne voit un film étant jeune, plus il est mémorable pour l’individu.}
 
+\subsection{Hypothèses 9}
+Le but de cette section est de juger l’importance de certaines caractéristiques d’un film.
+\begin{itemize}
+	\item $H_{9.1}$ : L’histoire est importante pour qu’un film soit mémorable
+	\item $H_{9.2}$: Pouvoir revoir un film plusieurs fois sans se lasser est important pour que le film soit mémorable
+	\item $H_{9.3}$: Avoir vu un film enfant est important pour que ce film soit mémorable
+	\item $H_{9.4}$: Le fait qu’être porteur d’émotion est important pour que ce film soit mémorable
+	\item $H_{9.5}$: La musique est importante pour qu’un film soit mémorable
+	\item $H_{9.6}$: Les répliques sont importantes pour qu’un film soit mémorable
+\end{itemize}
+Vu que les variables sont categorielles et que l'ont cherche a déterminer quel est la plus grande opinion au sein de la population, nous allons faire des tests du $\chi^1$.Les hypothèses de test sont les suivantes :
+\begin{itemize}
+	\item $H_0: \ p_{D'accord}=p_{Plutôt d'accord} = p_{Neutre} = p_{Plutôt pas d'accord}= p_{Pas d'accord}$ 
+	\item $H_a: \ $Les proportions sont différentes
+\end{itemize}
+Ainsi, pour affirmer nos hypothèses écrites plus haut, nous devons invalider l’hypothèse nulle pour chaque caractéristique.
+
+\subsubsection{Visualisation}
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[keepaspectratio,scale=0.6]{h91.png}
+	\caption{Proportion des caractéristique \#1}
+\end{figure}~\\
+\newpage
+\begin{figure}[!h]
+	\centering
+	\includegraphics[keepaspectratio,scale=0.6]{h9.png}
+	\caption{Proportion des caractéristique \#2}
+\end{figure}~\\
+Il s’agit ici de comparer les effectifs de chaque proportion pour chaque caractéristique. Il fallait donc récupérer le nombre d'occurrences de chaque jugement (d’accord, plutôt d’accord, neutre, plutôt pas d’accord, pas d’accord) avant de faire les tests statistiques. Les résultats obtenus sur le sondage sont visibles ci-dessus. 
+\subsubsection{Application des tests}
+Pour les tests statistiques nous avons toujours procédé de la même façon: vu qu’il faut comparer les effectifs de données catégorielles, nous avons fait deux séries de tests du $\chi^2$ :
+
+\begin{wrapfigure}[12]{hbt}{5.5cm}
+\begin{tabular}{|p{3cm}|p{2cm}|}
+	\hline
+	\rule{0cm}{5mm}
+	Caractéristique & P-value obtenue \\
+	\hline
+	\rule{0cm}{5mm}
+	Réplique & 7.934$e^{-68}$\\
+	\hline
+	\rule{0cm}{5mm}
+	Musique & 1.397$e^{-12}$\\
+	\hline
+	\rule{0cm}{5mm}
+	Histoire & 2.976$e^{-103}$\\
+	\hline
+	\rule{0cm}{5mm}
+	Revoir le film & 7.303$e^{-35}$\\
+	\hline
+	\rule{0cm}{5mm}
+	L’avoir vu enfant & 5.944$e^{-08}$\\
+	\hline
+	\rule{0cm}{5mm}
+	Porteur d’émotion & 1.950$e^{-47}$ \\
+	\hline
+\end{tabular}
+\end{wrapfigure}
+~\\
+\begin{itemize}
+	\item La première série prend en compte tous les effectifs. Le test statistique permettra de confirmer ou non la présence d’un jugement dominant pour la caractéristique en question.
+	\item La deuxième série est un test seulement sur les deux jugements ayant les plus grands effectifs. Si la p-value est inférieure à 5\%, cela voudra dire que de manière générale ce jugement pour cette caractéristique est majoritaire, et ce sans ambiguïté possible.
+\end{itemize}
+Les résultats obtenus pour la première série de test de $\chi^2$ sont visible ci-contre:
+\alertsuccess{Nous pouvons donc infirmer toutes les hypothèses 9: il y a pour chaque caractéristique au moins une opinion dominante.}
+\begin{wrapfigure}[15]{hbt}{5.5cm}
+	\begin{tabular}{|p{3cm}|p{2cm}|}
+		\hline
+		\rule{0cm}{5mm}
+		Caractéristique & P-value obtenue \\
+		\hline
+		\rule{0cm}{5mm}
+		Réplique & 4.355$e^{-09}$\\
+		\hline
+		\rule{0cm}{5mm}
+		Musique & 3.346$e^{-22}$\\
+		\hline
+		\rule{0cm}{5mm}
+		Histoire & 1.117$e^{-16}$\\
+		\hline
+		\rule{0cm}{5mm}
+		Revoir le film & 2.711$e^{-02}$\\
+		\hline
+		\rule{0cm}{5mm}
+		L’avoir vu enfant & 7.189$e^{-03}$\\
+		\hline
+		\rule{0cm}{5mm}
+		Porteur d’émotion & 0.4804 \\
+		\hline
+	\end{tabular}
+\end{wrapfigure}
+~\\
+Les résultats obtenus pour la deuxième série de test de $\chi^2$ sont visibles ci-contre:\\
+Ici nous pouvons remarquer que toute les tests révèlent une p-value <0.05 , excepté la p-value du "porteur d'émotion", qui elle est clairement au dessus (p-value = 0.48) du seuil. Nous pouvons donc affirmer :
+\begin{itemize}
+	\item Les répliques sont importantes pour qu'un film soit mémorable (D'accord)
+	\item La musique est importante pour qu'un film soit mémorable (D'accord)
+	\item La qualité de l'histoire est importante pour qu'un film soit mémorable (D'accord)
+	\item Revoir un film est important pour qu'un film soit mémorable (D'accord)
+	\item Avoir vu un film enfant est important pour qu'un film soit mémorable (D'accord)
+	\item >L'hypothèse nulle est acceptée pour la caractéristique porteur d'émotion. On peut conclure que nous n'avons pas assez d'élément pour déterminer si oui ou non cette caractéristique est importante pour qu'un film soit mémorable
+\end{itemize}
+\alertsuccess{Nous pouvons donc confirmer toutes les hypothèse de la partie 9, exceptée pour être porteur d'émotion}
+\subsection{Hypothèse 10}
+H9 : Les étudiants de l’IMT reconnaissent plus facilement les films proposés.
+\begin{itemize}
+	\item $H_0 : \ \mu_{nonIMT} = \mu_{IMT}$
+	\item $H_a : \ \mu_{nonIMT} \ne \mu_{IMT}$
+\end{itemize}
+Nous allons donc ici étudier les réponses des sondés en les divisant en deux population: étudiant de l’IMT ou non.
+\subsubsection{Visualisation}
+\begin{figure}[!h]
+	\includegraphics[keepaspectratio,scale=0.33]{h10.png}
+	\includegraphics[keepaspectratio,scale=0.33]{h101.png}
+	\caption{Répliques reconnues en fonction du statut (étudiant ou non)}
+\end{figure}~\\
+
+\subsubsection{ Application des test}
+Nous appliquons ici le test de Student.
+La moyenne de connaissance des films pour les étudiants IMT est de 0.75 et la moyenne de connaissance des films pour les non-étudiants IMT est de 0.7
+136 personnes non IMT Atlantique ont répondu au sondage contre 164 étudiants IMT Atlantique. Les deux populations impliquées sont donc de proportions équivalentes.\\
+Après application du test, nous obtenons les valeurs suivantes : $pvalue =   0.04971$, $t = 1.9704$.L'intervalle de confiance des différences de moyenne est de : [-0.10,0.00].\\
+\alertsuccess{On remarque que l'hypothèse a une p-value inférieure à 0.05. Nous pouvons donc rejeter l'hypothèse nulle. Ainsi les étudiant d'IMT Atlantique ont plus tendance à reconnaître les films proposés comparé aux non-étudiants IMT Atlantique. }
+En effet lors de la sélection des films, nous avions pensé qu'étant tous issus d'un milieu assez homogène, ce que nous pensions être connu l'était aussi pour les étudiants d'IMT Atlantique, mais peut être pas pour les autres. Ce test vient de le confirmer. 
+
+\section{Analyse critique du sondage}
+\subsection{Les critiques et biais du sondage:}
+Le premier et plus important biais que nous avons noté lors de ce sondage est celui de la population des sondés. En effet, nous avons proposé ce sondage aux étudiants de l’IMT, au personnel de l’IMT ainsi qu’à nos familles respectives. Cependant, nous avons une population d’étudiants de l’IMT bien supérieure aux deux autres (plus de la moitié de la population sont des étudiants de l’IMT). Ainsi, mêmes si représentées, les différentes catégories d'âge et nationalité ont un poids bien inférieur.\\
+Ensuite, le choix des 5 films est clairement biaisé. Nous sommes 6 dans notre groupe, 6 hommes français de 22-23 ans étudiants de l’IMT. Même si nous avons fait en sorte de choisir des “piliers” du cinéma d’époques et styles variés, nous étions conscients que notre objectivité était impossible. Nous nous attendions donc à avoir le plus de résultats positifs au blind test pour la catégorie à laquelle nous appartenons. Ceci se confirme lors de nos tests.\\
+De même, avec les tests, nous nous sommes rendus compte que nous avions choisis un film trop connu (“Le roi lion”). Ainsi, ce film n’est pas du tout clivant (seulement 7\% des gens ne l’ont jamais vu). L’analyse qui en découle ne représente pas fidèlement la réalité.\\
+De plus, nous avons remarqué un biais non négligeable lors du blind test. En effet, notre blind test est constitué autour de 5 films, avec pour chacun une réplique et une musique. Mettons-nous alors en situation de blind test. Une réplique que vous connaissez vient d’apparaître. Après un moment de réflexion, le nom du film vous revient et vous l’indiquez. Votre mémoire à court terme se met en marche et le nom de ce film reste dans un coin de votre tête. Ensuite, une fois arrivé à la musique de ce même film, vous vous en rappelez beaucoup plus facilement parce que vous vous l’êtes remémoré juste avant. Cependant, dans la situation où la musique passe en premier, peut-être n’auriez vous pas retrouvé le nom du film. Ainsi, l'association musique/réplique est un biais en soi. Cependant, ce biais est inévitable, étant donné le sujet de notre sondage.\\
+Après, notre question préliminaire “Pensez-vous reconnaitre plus un film par sa musique ou par ses répliques?” que nous avons formulé a provoqué un biais que nous avons remarqué lors des tests. En effet, un certain nombre de personnes reconnaissent aussi bien la musique que la réplique, alors que notre question ne permet qu’un choix de l’un ou l’autre. Lors des tests, nous avons donc remarqué qu’un bon nombres de nos résultats étaient légèrement faussés par ces personnes qui ont bien répondu aux répliques et musiques du blind test. Cependant, nous l’avons décidé en connaissance de cause, pour vraiment confronter les deux propositions. Nous craignions qu’un choix “répliques et musiques” aurait poussé tous les participants à cliquer dessus par facilité.\\
+De plus, le sondage étant en ligne et envoyé par mail aux sondés, nous ne pouvons prévenir d’éventuelles “tricheries”. En effet, les sondés ont accès internet sur leurs ordinateurs au moment du sondage. Ils peuvent également être en présence d’autres personnes lors du remplissage, ce qui peut biaiser les données récoltées.\\
+
+\subsection{Les solutions qui pourraient être trouvées pour pallier aux biais}
+Par manque de temps et de moyens, nous n’avons pas échantillonné notre population sondée. Nous aurions pu faire un échantillonnage stratifié auprès d’une très large population en utilisant d’autres moyens de diffusion de sondage pour pouvoir vérifier le fait qu’un film soit “culte” pour le plus de types de personnes possibles. Nous aurions pris comme caractéristiques principales l’âge et la nationalité des personnes pour piocher nos différents sous-échantillons. Cet échantillonnage irait pallier notre biais le plus important, à savoir la grande proportion d’étudiant de l’IMT dans notre sondage. En prenant un plus large échantillon pour le sondage idéal, nous aurions moins de problèmes avec la population qui ne connaît pas Le Roi Lion puisqu'elle sera sûrement plus grande, et donc, plus représentative de la réalité et apte à être analysée.\\
+Afin de choisir les films à tester le plus efficacement possible, il faudrait recueillir des données sur une première population (plus petite) et réaliser un pré-sondage pour demander quels films sont cultes par leurs musiques et par leurs répliques afin de choisir les plus récurrents.\\
+Pour le biais de la mémoire à court terme des sondés, une solution serait d’augmenter le nombre de films cultes pour noyer les sondés d’informations. Toutefois, le sondage gagnerait en longueur et pourrait être trop long pour les sondés. Il serait aussi possible de de séparer les répliques des films des musiques de films. On ne peut donc plus vérifier qu’un film est culte s’il est deviné par blind test et réplique. Une autre solution serait de prendre des films moins connus. Nous aurions alors plus d’informations sur la différence réplique/musique pour définir un film culte, mais le but de notre sondage perdrait en sens puisqu’on ne testerait plus les caractéristiques de films vraiment cultes.\\
+De plus, en réalisant le sondage directement auprès des sondés, en face à face, nous pourrions empêcher tout problème de “tricherie”. Cependant, le volume horaire engendré, pour atteindre un échantillon identique, serait beaucoup trop important et impossible pour le délai de ce projet.
+\section{Remarques}
+Plusieurs retours de la part des sondés ont été très positifs du fait qu’ils ont aimé participer à ce sondage et nous l’ont signalé, en particulier à cause du blind test. Plusieurs personnes nous ont aussi fait part de leur intérêt quant à nos résultats ou cherchaient à savoir quelle était la musique - réplique qu’ils n’avaient pas reconnus.\\
+Cet attrait du sondage se retrouve dans nos résultats puisque plus de 300 personnes ont correctement complété ce sondage et seulement 80 personnes ont abandonné en cours de remplissage pour ce long sondage qui durait presque 8 minutes. De plus, nous estimons qu’une bonne part de ces abandons sont dus à la contrainte de devoir écouter l’audio, ce qui ne peut pas être fait dans n’importe quel contexte.\\
+
+\newpage
+\section{Annexes}
+\subsection{Retrouver l'ensemble des résultat}
+L'ensemble des tests statistiques ont été fait sur un Jupyter Notebook disponible sur le lien github suivant (fichier nommé : Projet Stats.ipynb). Si vous n'avez pas installé Jupyter Notebook, vous pouvez télécharger le fichier HTML (Projet Stats.ipynb). Les graphiques ne sont pas visibles dans le mode aperçu de github.
+\alertinfo{\url{https://github.com/Syndorik/ProjetStats}. Il faut télécharger le fichier afin de pouvoir visualiser les graphiques}
+
+\subsection{Remerciement}
+\begin{itemize}
+	\item Ce rapport a été fait sous LaTeX. Nous remercions \textbf{Armand FOUCAULT} et \textbf{Benoît PORTEBOEUF} pour avoir créer le template IMT Atlantique sur LaTeX. Il est disponible sur le lien suivant :
+	\alertinfo{https://github.com/bporteboeuf/imtaLatexTemplate}
+	\item Nous remercions toue les personnes pour avoir répondu au sondage
+\end{itemize}
 
 
 \imtaMakeCover
